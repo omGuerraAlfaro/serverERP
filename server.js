@@ -7,10 +7,11 @@ const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({  
+app.use(cors({
   "origin": "*",
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,}));
+  "preflightContinue": false,
+}));
 
 const connection = mysql.createConnection({
   host: process.env.HOST,
@@ -32,8 +33,8 @@ app.post('/login', (req, res) => {
     if (err) {
       throw err;
     }
-    if (results.length === 0) {      
-      res.status(401).send(email_user,password);
+    if (results.length === 0) {
+      res.status(401).send(email_user, password);
     } else {
       res.send(results);
     }
@@ -161,6 +162,22 @@ app.post('/indicadores/activos/agregar', (req, res) => {
 app.delete('/indicadores/activos/eliminar/:id_indicador', (req, res) => {
   const { id_indicador } = req.params;
   connection.query('DELETE FROM `cod_cont_indicador` WHERE id_indicador = ?', [id_indicador], (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+/* Activos SUBINDICADORES AGREGAR */
+app.post('/subindicadores/activos/agregar', (req, res) => {
+  const { id_subindicador, cod_contable, descripcion, id_indicador } = req.body;
+  connection.query('INSERT INTO cod_cont_subindicador (id_subindicador, cod_contable, descripcion, id_indicador) VALUES (?, ?, ?, ?)', [id_subindicador, cod_contable, descripcion, id_indicador], (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+/* Activos SUBINDICADORES DELETE */
+app.delete('/subindicadores/activos/eliminar/:id_subindicador', (req, res) => {
+  const { id_subindicador } = req.params;
+  connection.query('DELETE FROM `cod_cont_subindicador` WHERE id_subindicador = ?', [id_subindicador], (err, results) => {
     if (err) throw err;
     res.send(results);
   });

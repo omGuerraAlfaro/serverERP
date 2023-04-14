@@ -111,7 +111,7 @@ app.get('/indicadores/activos', (req, res) => {
   });
 });
 app.get('/subindicadores/activos', (req, res) => {
-  connection.query('SELECT SIND.cod_contable, SIND.descripcion FROM cod_cont_categoria CAT JOIN cod_cont_subcategoria SC ON CAT.id_categoria = SC.id_categoria JOIN cod_cont_indicador IND ON SC.id_subcategoria = IND.id_subcategoria JOIN cod_cont_subindicador SIND ON IND.id_indicador = SIND.id_indicador WHERE CAT.id_categoria = 1;', (err, results) => {
+  connection.query('SELECT SIND.id_subindicador, SIND.cod_contable, SIND.descripcion FROM cod_cont_categoria CAT JOIN cod_cont_subcategoria SC ON CAT.id_categoria = SC.id_categoria JOIN cod_cont_indicador IND ON SC.id_subcategoria = IND.id_subcategoria JOIN cod_cont_subindicador SIND ON IND.id_indicador = SIND.id_indicador WHERE CAT.id_categoria = 1;', (err, results) => {
     if (err) throw err;
     res.send(results);
   });
@@ -143,9 +143,9 @@ app.delete('/subcategorias/activos/eliminar/:id_subcategoria', (req, res) => {
   });
 });
 /* Activos SUBCATEGORIA UPDATE */
-app.put('/subcategorias/activos/update', (req, res) => {
-  const { id_categoria, cod_contable, descripcion } = req.body;
-  connection.query('UPDATE `cod_cont_categoria` SET cod_contable = ?, descripcion = ? WHERE id_categoria = 1 AND cod_contable LIKE ? AND descripcion LIKE ?', [cod_contable, descripcion, id_categoria, cod_contable, descripcion], (err, results) => {
+app.put('/subcategorias/activos/editar/:id_subcategoria', (req, res) => {
+  const { id_subcategoria, cod_contable, descripcion, id_categoria } = req.body;
+  connection.query('UPDATE cod_cont_subcategoria SET id_subcategoria= ?, cod_contable= ?, descripcion=?, id_categoria= ? WHERE id_subcategoria = ?', [id_subcategoria, cod_contable, descripcion, id_categoria, id_subcategoria], (err, results) => {
     if (err) throw err;
     res.send(results);
   });

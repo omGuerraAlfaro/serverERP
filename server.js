@@ -298,13 +298,20 @@ app.get('/subindicadores/egresos', (req, res) => {
 
 /* LIBRO DE BANCO INSERT */
 app.post('/libro_banco/agregar', (req, res) => {
-  const { id_mov, fecha_mov, cod_contable, id_transaccion, descripcion, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador } = req.body;
-  connection.query('INSERT INTO libro_banco (id_mov, fecha_mov, cod_contable, id_transaccion, descripcion, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_mov, fecha_mov, cod_contable, id_transaccion, descripcion, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador], (err, results) => {
+  const {id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador } = req.body;
+  connection.query('INSERT INTO libro_banco (id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador], (err, results) => {
     if (err) throw err;
     res.send(results);
   });
 });
 
+/* LIBRO DE BANCO GET */
+app.get('/libro_banco', (req, res) => {
+  connection.query('SELECT * FROM libro_banco', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
 
 
 app.listen(3001, () => console.log('Server started on port 3001'));

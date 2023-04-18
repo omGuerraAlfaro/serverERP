@@ -314,4 +314,14 @@ app.get('/libro_banco', (req, res) => {
 });
 
 
+/* CATEGORIZADOR + SUB AGRUPACION DE VALORES POR CATEGORIA */
+/* SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco WHERE id_indicador = 1 GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador; */
+app.get('/libro_banco/categorizador', (req, res) => {
+  connection.query('SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+
+
 app.listen(3001, () => console.log('Server started on port 3001'));

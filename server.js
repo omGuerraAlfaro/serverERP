@@ -298,7 +298,7 @@ app.get('/subindicadores/egresos', (req, res) => {
 
 /* LIBRO DE BANCO INSERT */
 app.post('/libro_banco/agregar', (req, res) => {
-  const {id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador, estado } = req.body;
+  const { id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador, estado } = req.body;
   connection.query('INSERT INTO libro_banco (id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador, estado], (err, results) => {
     if (err) throw err;
     res.send(results);
@@ -322,7 +322,7 @@ app.delete('/libro_banco/eliminar/:id', (req, res) => {
 /* LIBRO BANCO UPDATE */
 app.put('/libro_banco/actualizar/:id', (req, res) => {
   const { id } = req.params;
-  const {id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador } = req.body;
+  const { id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador } = req.body;
   connection.query('UPDATE libro_banco SET id_libro = ?, id_mov = ?, fecha_mov = ?, cod_contable = ?, descripcion = ?, empresa_asociada = ?, salidas_libro = ?, entradas_libro = ?, saldo_libro = ?, id_categoria = ?, id_subcategoria = ?, id_indicador = ?, id_subindicador = ? WHERE id_libro = ?', [id_libro, id_mov, fecha_mov, cod_contable, descripcion, empresa_asociada, salidas_libro, entradas_libro, saldo_libro, id_categoria, id_subcategoria, id_indicador, id_subindicador, id], (err, results) => {
     if (err) throw err;
     res.send(results);
@@ -334,6 +334,15 @@ app.put('/libro_banco/actualizar/:id', (req, res) => {
 /* SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco WHERE id_indicador = 1 GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador; */
 app.get('/libro_banco/categorizador', (req, res) => {
   connection.query('SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+
+/* SELECCION DE ID DE MOVIMIENTOS CATEGORIZADOS */
+/* select id_mov FROM libro_banco WHERE estado = 'categorizado'; */
+app.get('/libro_banco/categorizados', (req, res) => {
+  connection.query('select id_mov FROM libro_banco WHERE estado = "categorizado";', (err, results) => {
     if (err) throw err;
     res.send(results);
   });

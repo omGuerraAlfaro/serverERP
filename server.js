@@ -329,16 +329,46 @@ app.put('/libro_banco/actualizar/:id', (req, res) => {
   });
 });
 
-/* LIBRO BANCO CATEGORIZADOR */
-/* CATEGORIZADOR + SUB AGRUPACION DE VALORES POR CATEGORIA */
-/* SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco WHERE id_indicador = 1 GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador; */
-app.get('/libro_banco/categorizador', (req, res) => {
-  connection.query('SELECT id_categoria, id_subcategoria, id_indicador, id_subindicador, SUM(salidas_libro) as total_salidas, SUM(entradas_libro) as total_entradas FROM libro_banco GROUP BY id_categoria, id_subcategoria, id_indicador, id_subindicador;', (err, results) => {
+/* LIBRO BANCO SUMATORIAS... */
+/* AGRUPACION DE VALORES POR CATEGORIA */
+app.get('/libro_banco/getsum/activos', (req, res) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 1 GROUP BY ccc.id_categoria;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+app.get('/libro_banco/getsum/pasivos', (req, res) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 2 GROUP BY ccc.id_categoria;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+app.get('/libro_banco/getsum/patrimonio', (req, res) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 3 GROUP BY ccc.id_categoria;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+app.get('/libro_banco/getsum/ingreso', (req, res) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 4 GROUP BY ccc.id_categoria;', (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+app.get('/libro_banco/getsum/egreso', (req, res) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 5 GROUP BY ccc.id_categoria;', (err, results) => {
     if (err) throw err;
     res.send(results);
   });
 });
 
+
+
+
+
+
+
+/* ************************************************************************ */
 /* SELECCION DE ID DE MOVIMIENTOS CATEGORIZADOS */
 /* select id_mov FROM libro_banco WHERE estado = 'categorizado'; */
 app.get('/libro_banco/categorizados', (req, res) => {

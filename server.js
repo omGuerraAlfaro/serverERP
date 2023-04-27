@@ -329,6 +329,8 @@ app.put('/libro_banco/actualizar/:id', (req, res) => {
   });
 });
 
+
+/* *********************************************************************** */
 /* LIBRO BANCO SUMATORIAS... */
 /* AGRUPACION DE VALORES POR CATEGORIA */
 app.get('/libro_banco/getsum/activos', (req, res) => {
@@ -350,19 +352,28 @@ app.get('/libro_banco/getsum/patrimonio', (req, res) => {
   });
 });
 app.get('/libro_banco/getsum/ingreso', (req, res) => {
-  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 4 GROUP BY ccc.id_categoria;', (err, results) => {
-    if (err) throw err;
-    res.send(results);
-  });
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 4 GROUP BY ccc.id_categoria;',
+    (err, results) => {
+      if (err) throw err;
+      res.send(results);
+    });
 });
 app.get('/libro_banco/getsum/egreso', (req, res) => {
-  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 5 GROUP BY ccc.id_categoria;', (err, results) => {
+  connection.query('SELECT ccc.id_categoria, ccc.cod_contable, ccc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria WHERE lb.id_categoria = 5 GROUP BY ccc.id_categoria;',
+    (err, results) => {
+      if (err) throw err;
+      res.send(results);
+    });
+});
+
+/* ****************************************************************************** */
+/* AGRUPACION DE VALORES POR SUBCATEGORIAS   (AGRUPADAS POR IDSUBCATEGORIA)*/ 
+app.get('/libro_banco/getsum/subcategoria', (req, res) => {
+  connection.query('SELECT ccsc.id_categoria, ccsc.id_subcategoria, ccsc.cod_contable, ccsc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_subcategoria ccsc ON lb.id_subcategoria = ccsc.id_subcategoria GROUP BY ccsc.id_subcategoria;', (err, results) => {
     if (err) throw err;
     res.send(results);
   });
 });
-
-
 
 
 

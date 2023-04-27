@@ -368,15 +368,42 @@ app.get('/libro_banco/getsum/egreso', (req, res) => {
 
 /* ****************************************************************************** */
 /* AGRUPACION DE VALORES POR SUBCATEGORIAS   (AGRUPADAS POR IDSUBCATEGORIA)*/ 
-app.get('/libro_banco/getsum/subcategoria', (req, res) => {
-  connection.query('SELECT ccsc.id_categoria, ccsc.id_subcategoria, ccsc.cod_contable, ccsc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_subcategoria ccsc ON lb.id_subcategoria = ccsc.id_subcategoria GROUP BY ccsc.id_subcategoria;', (err, results) => {
+// app.get('/libro_banco/getsum/subcategoria', (req, res) => {
+//   connection.query('SELECT ccsc.id_categoria, ccsc.id_subcategoria, ccsc.cod_contable, ccsc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_subcategoria ccsc ON lb.id_subcategoria = ccsc.id_subcategoria GROUP BY ccsc.id_subcategoria;', (err, results) => {
+//     if (err) throw err;
+//     res.send(results);
+//   });
+// });
+
+
+app.get('/libro_banco/getsum/subcategoria/activos', (req, res) => {
+  connection.query('SELECT ccsc.id_categoria, ccsc.id_subcategoria, ccsc.cod_contable, ccsc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_subcategoria ccsc ON lb.id_subcategoria = ccsc.id_subcategoria WHERE ccsc.id_categoria = 1 GROUP BY ccsc.id_subcategoria;', 
+  (err, results) => {
+    if (err) throw err;
+    res.send(results);
+  });
+});
+
+app.get('/libro_banco/getsum/subcategoria/pasivos', (req, res) => {
+  connection.query('SELECT ccsc.id_categoria, ccsc.id_subcategoria, ccsc.cod_contable, ccsc.descripcion, SUM(lb.salidas_libro) as total_salidas, SUM(lb.entradas_libro) as total_entradas FROM libro_banco lb JOIN cod_cont_subcategoria ccsc ON lb.id_subcategoria = ccsc.id_subcategoria WHERE ccsc.id_categoria = 2 GROUP BY ccsc.id_subcategoria;', 
+  (err, results) => {
     if (err) throw err;
     res.send(results);
   });
 });
 
 
+/* indicadores
 
+SELECT cci.id_indicador, cci.cod_contable, cci.descripcion, 
+SUM(lb.salidas_libro) as total_salidas,
+SUM(lb.entradas_libro) as total_entradas 
+FROM libro_banco lb 
+JOIN cod_cont_categoria ccc ON lb.id_categoria = ccc.id_categoria
+JOIN cod_cont_indicador cci ON lb.id_indicador = cci.id_indicador
+WHERE ccc.id_categoria = 1
+ORDER BY cci.id_indicador;
+*/
 
 
 /* ************************************************************************ */
